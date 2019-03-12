@@ -1,11 +1,13 @@
 require('dotenv').load()
 
 const twilio = require('twilio')(process.env.TWILIO_accountSid, process.env.TWILIO_authToken)
+
+
 const verifyNumber = require('../api/twilio_api').verifyNumber
 const VoiceResponse = require('twilio').twiml.VoiceResponse
 
 // Globally define the number you want to receive messages and calls from.
-const my_number = '+16475286355'
+const my_number = 'MY_PHONE_NUMBER'
 
 exports.receive_sms = (req, res, next) => {
   console.log(req.body)
@@ -79,7 +81,7 @@ exports.receive_call = (req, res, next) => {
   console.log(`Incoming Call from ${from} to ${to}`)
 
   if (from === my_number) {
-    console.log('hi')
+    // TLDR
   } else {
     // incoming call to your number
 
@@ -88,24 +90,10 @@ exports.receive_call = (req, res, next) => {
     const dial = voiceResponse.dial({ callerId: from, })
     dial.number(my_number)
 
-    // could send a message to indicate a call is coming in
-
     console.log(dial)
     console.log(voiceResponse.toString())
 
     res.type('text/xml')
     res.send(voiceResponse.toString())
   }
-
-  // const voiceResponse = new VoiceResponse()
-  // voiceResponse.say({
-  //   voice: 'man',
-  //   language: 'en',
-  // },
-  //  'this call may be recorded for quality and training purposes'
-  // )
-  //
-  // const dial = voiceResponse.dial({ callerId: to, record: 'record-from-answer' })
-  // dial.number(outgoingObject.outgoingPhoneNumber)
-
 }
